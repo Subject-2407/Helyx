@@ -1,7 +1,7 @@
 # Helyx
 ### Version : 0.0.9
 
-A turn-based RPG Console Game made with Java. (Previously named Runebound)
+A turn-based RPG Game made with Java. (Previously named Runebound)
 
 ## Current Features
 1. Character System (Player, Monsters)
