@@ -8,7 +8,7 @@ A turn-based RPG Console Game made with Java. (Previously named Runebound)
 2. Inventory & Item System (Equipments, Usables)
 3. Travel System (Explore places like tavern, shop, dungeon)
 4. Combat System (Hit Chance, Block Chance, Damage)
-5. More things are coming in the future..
+   and more things are coming in the future..
 
 
 
