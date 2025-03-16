@@ -11,20 +11,8 @@ A turn-based RPG Game made with Java. (previously named Runebound)
    
 and more things are coming in the future..
 
-## v0.1.0 Changelog
-### New
-- Class System 
-
-You can now choose classes like Warrior, Rogue, Guardian, etc. It currently only has physical-related classes since I have not yet implemented spell/magical mechanics.
-
-## v0.0.17 Changelog
-### New
-- Area (holds multiple Place like Tavern, Shop, Dungeon, etc.)
+## v0.1.2 Changelog
 ### Changes
-- Inventory list is now ordered based on Item type
-### Fixes
-- Negative player damage reduction fix
-- Duplicate equipped equipments fix
-
+- Minor changes in code
 
 
