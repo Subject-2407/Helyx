@@ -6,6 +6,7 @@ import java.util.Scanner;
 import com.steven.helyx.characters.*;
 import com.steven.helyx.characters.Class;
 import com.steven.helyx.database.ClassDatabase;
+import com.steven.helyx.database.ItemDatabase;
 import com.steven.helyx.database.MonsterDatabase;
 import com.steven.helyx.game.*;
 import com.steven.helyx.items.*;
@@ -36,20 +37,12 @@ public class Main {
         inventory.addItem(new Usable("Health Potion", "Adds 50 HP.",40, 1, 50));
         inventory.addItem(new Usable("Health Potion", "Adds 50 HP.",40, 1, 50));
 
-        // generate shop items
-        ArrayList<Item> emberforgeItems = new ArrayList<>();
-        emberforgeItems.add(new Equipment("Iron Sword", "A sword made of iron, much better than the wooden one.", 100, 1, 20, 7));
-        emberforgeItems.add(new Equipment("Leather Tunic", "Peasant clothes.", 30, 2, 0, 10));
-        emberforgeItems.add(new Usable("Small Health Potion", "Restores 25 HP.",20, 1, 25));
-        emberforgeItems.add(new Usable("Energy Potion", "Restores 5 Energy.", 30, 2, 5));
-        emberforgeItems.add(new Usable("The Golden Potion", "Restores 50 HP and 5 Energy.", 60, 3, 50));
-
         // render area
         Area eldoria = new Area("Eldoria Plains", "Vast golden fields with a gentle breeze.");
 
         // render places
         eldoria.addPlace(new Tavern("Moonlit Ember", "A warm and elegant inn. (Restore health & energy for 40 gold)", 40));
-        eldoria.addPlace(new Shop("Emberforge", "We sell best quality equipments and items! (Shop)", emberforgeItems));
+        eldoria.addPlace(new Shop("Emberforge", "We sell best quality equipments and items! (Shop)", ItemDatabase.emberforgeItems()));
         eldoria.addPlace(new Guild("Stormbringers", "A guild known for its powerful warriors who bring chaos to battle. (Guild)", ClassDatabase.beginnerClasses()));
         eldoria.addPlace(new Forest("Eldertree", "Home to a massive ancient tree said to contain untold wisdom. (Forest)", 1));
         eldoria.addPlace(new Dungeon("Churenim Cavern", "A deep cavern where the cries of the lost echo eternally. (Dungeon)", 2, MonsterDatabase.dungeonMonsters()));
