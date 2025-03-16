@@ -7,6 +7,7 @@ import com.steven.helyx.characters.*;
 import com.steven.helyx.database.MonsterDatabase;
 import com.steven.helyx.game.*;
 import com.steven.helyx.items.*;
+import com.steven.helyx.locations.Area;
 import com.steven.helyx.locations.Dungeon;
 import com.steven.helyx.locations.Forest;
 import com.steven.helyx.locations.Shop;
@@ -32,21 +33,23 @@ public class Main {
         inventory.addItem(new Usable("Health Potion", "Adds 50 HP.",40, 1, 50));
         inventory.addItem(new Usable("Health Potion", "Adds 50 HP.",40, 1, 50));
 
-        // initialize items
-        ArrayList<Item> shop1Items = new ArrayList<>();
-        shop1Items.add(new Equipment("Iron Sword", "A sword made of iron, much better than the wooden one.", 100, 1, 20, 7));
-        shop1Items.add(new Equipment("Leather Tunic", "Peasant clothes.", 30, 2, 0, 10));
-        shop1Items.add(new Usable("Small Health Potion", "Restores 25 HP.",20, 1, 25));
-        shop1Items.add(new Usable("Energy Potion", "Restores 5 Energy.", 30, 2, 5));
-        shop1Items.add(new Usable("The Golden Potion", "Restores 50 HP and 5 Energy.", 60, 3, 50));
+        // generate shop items
+        ArrayList<Item> emberforgeItems = new ArrayList<>();
+        emberforgeItems.add(new Equipment("Iron Sword", "A sword made of iron, much better than the wooden one.", 100, 1, 20, 7));
+        emberforgeItems.add(new Equipment("Leather Tunic", "Peasant clothes.", 30, 2, 0, 10));
+        emberforgeItems.add(new Usable("Small Health Potion", "Restores 25 HP.",20, 1, 25));
+        emberforgeItems.add(new Usable("Energy Potion", "Restores 5 Energy.", 30, 2, 5));
+        emberforgeItems.add(new Usable("The Golden Potion", "Restores 50 HP and 5 Energy.", 60, 3, 50));
 
-        // initialize world
-        Tavern tavern1 = new Tavern("Elden", "The best tavern in the town. (Restores health & energy for 40 gold)", 40);
-        Shop shop1 = new Shop("Yulgar", "We sell best equipments and items!", shop1Items);
-        Forest forest1 = new Forest("Rivendell", "The beginner forest", 1);
-        Dungeon dungeon1 = new Dungeon("Churenim", "Beginner dungeon", 2, MonsterDatabase.dungeonMonsters());
+        // render area
+        Area eldoria = new Area("Eldoria Plains", "Vast golden fields with a gentle breeze.");
 
-        
+        // render places
+        eldoria.addPlace(new Tavern("Moonlit Ember", "A warm and elegant inn. (Restore health & energy for 40 gold)", 40));
+        eldoria.addPlace(new Shop("Emberforge", "We sell best quality equipments and items! (Shop)", emberforgeItems));
+        eldoria.addPlace(new Forest("Eldertree", "Home to a massive ancient tree said to contain untold wisdom. (Forest)", 1));
+        eldoria.addPlace(new Dungeon("Churenim Cavern", "A deep cavern where the cries of the lost echo eternally. (Dungeon)", 2, MonsterDatabase.dungeonMonsters()));
+
         while (player.isAlive()) {
             player.displayInfo();
             System.out.println("[1] Travel");
@@ -66,29 +69,19 @@ public class Main {
                     while (inTravelMenu) {
                         player.displayInfo();
                         if (!player.isAlive()) { break; }
-                        System.out.println("==== Travel ====\n");
-                        System.out.println("[1] Elden Tavern");
-                        System.out.println("[2] Yulgar Shop");
-                        System.out.println("[3] Rivendell Forest (1 Energy)");
-                        System.out.println("[4] Churenim Dungeon (2 Energy)");
+                        System.out.println("==== Travel to Area ====\n");
+                        System.out.println("[1] Eldoria Plains");
+                        System.out.println("[2] Unknown Area");
+                        System.out.println("[3] Unknown Area");
                         System.out.println("\n[0] Return to Main Menu");
                         System.out.print("\nEnter your choice: ");
-                        int travelChoice = scanner.nextInt();
+                        int choice = scanner.nextInt();
                         scanner.nextLine();
                         System.out.println();
                         
-                        switch (travelChoice) {
+                        switch (choice) {
                             case 1:
-                                tavern1.explore(player);
-                                break;
-                            case 2:
-                                shop1.explore(player);
-                                break;
-                            case 3:
-                                forest1.explore(player);
-                                break;
-                            case 4:
-                                dungeon1.explore(player);
+                                eldoria.explore(player);
                                 break;
                             case 0:
                                 inTravelMenu = false;
