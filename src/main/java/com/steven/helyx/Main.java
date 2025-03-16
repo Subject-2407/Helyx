@@ -14,10 +14,11 @@ import com.steven.helyx.locations.Tavern;
 import com.steven.helyx.utilities.UserInterface;
 
 public class Main {
+    private static String version = "v0.0.9";
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         UserInterface.clearConsole();
-        System.out.println("==== Helyx v0.1 ====\nA simple text-based RPG game.");
+        System.out.println("==== Helyx " + version + " ====\nA simple text-based RPG game.");
         System.out.printf("\nEnter your name: ");
         String playerName = scanner.nextLine();
         Player player = new Player(playerName, "Novice");
@@ -40,7 +41,7 @@ public class Main {
         shop1Items.add(new Usable("The Golden Potion", "Restores 50 HP and 5 Energy.", 60, 3, 50));
 
         // initialize world
-        Tavern tavern1 = new Tavern("Elden", "The best tavern in the town. (Restores health for 10 golds)");
+        Tavern tavern1 = new Tavern("Elden", "The best tavern in the town. (Restores health & energy for 40 gold)", 40);
         Shop shop1 = new Shop("Yulgar", "We sell best equipments and items!", shop1Items);
         Forest forest1 = new Forest("Rivendell", "The beginner forest", 1);
         Dungeon dungeon1 = new Dungeon("Churenim", "Beginner dungeon", 2, MonsterDatabase.dungeonMonsters());
