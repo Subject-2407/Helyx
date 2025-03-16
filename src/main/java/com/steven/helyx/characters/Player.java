@@ -33,7 +33,7 @@ public class Player {
         this.playerClass = playerClass;
         this.level = 1;
         this.xp = 0;
-        this.gold = 100;
+        this.gold = 1000;
         this.maxEnergy = 10;
         this.currentEnergy = maxEnergy;
         this.playerStats = new LinkedHashMap<>();
@@ -200,7 +200,7 @@ public class Player {
         int weaponDefense = equippedWeapon != null ? equippedWeapon.getDefenseBonus() : 0;
         int playerDefense = playerStats.get("Defense");
         double reductionPercentage = ((armorDefense * 0.6) + (weaponDefense * 0.3) + (playerDefense * 0.1)) / (rawDamage + 1);
-        int finalDamage = (int) (rawDamage * (1 - reductionPercentage));
+        int finalDamage = Math.max(1, (int) (rawDamage * (1 - reductionPercentage)));
         currentHP -= finalDamage;
         if (currentHP < 0) currentHP = 0;
 
