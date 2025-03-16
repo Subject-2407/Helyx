@@ -1,5 +1,5 @@
 # Helyx
-### Version : 0.1.0 alpha
+### Version : 0.1.2 alpha
 
 A turn-based RPG Game made with Java. (previously named Runebound)
 
