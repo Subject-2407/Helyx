@@ -5,9 +5,11 @@ import java.util.Scanner;
 
 import com.steven.helyx.characters.*;
 import com.steven.helyx.characters.Class;
+import com.steven.helyx.database.AreaDatabase;
 import com.steven.helyx.database.ClassDatabase;
 import com.steven.helyx.database.ItemDatabase;
 import com.steven.helyx.database.MonsterDatabase;
+import com.steven.helyx.database.PlaceDatabase;
 import com.steven.helyx.game.*;
 import com.steven.helyx.items.*;
 import com.steven.helyx.locations.Area;
@@ -38,14 +40,7 @@ public class Main {
         inventory.addItem(new Usable("Health Potion", "Adds 50 HP.",40, 1, 50));
 
         // render area
-        Area eldoria = new Area("Eldoria Plains", "Vast golden fields with a gentle breeze.");
-
-        // render places
-        eldoria.addPlace(new Tavern("Moonlit Ember", "A warm and elegant inn. (Restore health & energy for 40 gold)", 40));
-        eldoria.addPlace(new Shop("Emberforge", "We sell best quality equipments and items! (Shop)", ItemDatabase.emberforgeItems()));
-        eldoria.addPlace(new Guild("Stormbringers", "A guild known for its powerful warriors who bring chaos to battle. (Guild)", ClassDatabase.beginnerClasses()));
-        eldoria.addPlace(new Forest("Eldertree", "Home to a massive ancient tree said to contain untold wisdom. (Forest)", 1));
-        eldoria.addPlace(new Dungeon("Churenim Cavern", "A deep cavern where the cries of the lost echo eternally. (Dungeon)", 2, MonsterDatabase.dungeonMonsters()));
+        ArrayList<Area> beginnerAreas = AreaDatabase.beginnerAreas();
 
         while (player.isAlive()) {
             player.displayInfo();
@@ -63,32 +58,7 @@ public class Main {
                     inventory.showMenu(player);
                     break;
                 case 1:
-                    boolean inTravelMenu = true;
-                    while (inTravelMenu) {
-                        player.displayInfo();
-                        if (!player.isAlive()) { break; }
-                        System.out.println("==== Travel to Area ====\n");
-                        System.out.println("[1] Eldoria Plains");
-                        System.out.println("[2] Unknown Area");
-                        System.out.println("[3] Unknown Area");
-                        System.out.println("\n[0] Return to Main Menu");
-                        System.out.print("\nEnter your choice: ");
-                        int choice = scanner.nextInt();
-                        scanner.nextLine();
-                        System.out.println();
-                        
-                        switch (choice) {
-                            case 1:
-                                eldoria.explore(player);
-                                break;
-                            case 0:
-                                inTravelMenu = false;
-                                break;
-                            default:
-                                System.out.println("Invalid choice!");
-                                UserInterface.enterReturn();
-                        }
-                    }
+                    travelMenu(beginnerAreas, player, scanner);
                     break;
                 case 3:
                     player.displayStatsMenu(scanner);
@@ -107,5 +77,33 @@ public class Main {
         
         System.out.println("Game Over..");
         scanner.close();
+    }
+
+    private static void travelMenu(ArrayList<Area> areas, Player player, Scanner scanner) {
+        boolean inTravelMenu = true;
+        while (inTravelMenu) {
+            player.displayInfo();
+            if (!player.isAlive()) { break; }
+            System.out.println("==== Travel to Area ====\n");
+
+            for (int i = 0; i < areas.size(); i++) {
+                Area area = areas.get(i);
+                System.out.println("[" + (i + 1) + "] " + area.getName());
+            }
+            System.out.println("\n[0] Return to Main Menu");
+            System.out.print("\nEnter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println();
+            
+            if (choice > 0 && choice <= areas.size()) {
+                areas.get(choice - 1).explore(player);
+            } else if (choice == 0) {
+                inTravelMenu = false;
+            } else {
+                System.out.println("Invalid choice!");
+                UserInterface.enterReturn();
+            }
+        }
     }
 }

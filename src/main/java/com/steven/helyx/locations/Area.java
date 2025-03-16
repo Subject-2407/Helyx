@@ -1,7 +1,6 @@
 package com.steven.helyx.locations;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 import com.steven.helyx.characters.Player;
@@ -9,19 +8,25 @@ import com.steven.helyx.characters.Player;
 public class Area {
     private String name;
     private String description;
-    private List<Place> places;
+    private ArrayList<Place> places;
     private Scanner scanner;
 
     public Area(String name, String description) {
         this.name = name;
         this.description = description;
-        this.places = new ArrayList<>();
+        this.places = null;
         this.scanner = new Scanner(System.in);
     }
 
-    public void addPlace(Place place) {
-        places.add(place);
+    public Area(String name, String description, ArrayList<Place> places) {
+        this.name = name;
+        this.description = description;
+        this.places = places;
+        this.scanner = new Scanner(System.in);
     }
+
+    public String getName() { return name; }
+    public String getDescription() { return description; }
 
     public void explore(Player player) {
         boolean explore = true;
@@ -30,9 +35,14 @@ public class Area {
             System.out.println("==== " + name + " ====");
             System.out.println(description + "\n");
 
-            for (int i = 0; i < places.size(); i++) {
-                System.out.println("[" + (i + 1) + "] " + places.get(i).getName() + "\n  - " + places.get(i).getDescription());
+            if (places == null) {
+                System.out.println("There is nothing to look out here.");
+            } else {
+                for (int i = 0; i < places.size(); i++) {
+                    System.out.println("[" + (i + 1) + "] " + places.get(i).getName() + "\n  - " + places.get(i).getDescription());
+                }
             }
+
             System.out.println("\n[0] Exit Area");
 
             System.out.print("\nEnter your choice: ");
