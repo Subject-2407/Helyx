@@ -133,8 +133,6 @@ public class Player {
             default:
                 System.out.println("> This item can't be equipped.");
         }
-
-        UserInterface.enterReturn();
     }
 
     public void useItem(Usable usableItem) {

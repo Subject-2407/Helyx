@@ -88,33 +88,59 @@ public class Inventory {
         }
     }
     
-    
 
     private void useItem(int index, Player player) {
+        Scanner scanner = new Scanner(System.in);
         sortInventory();
-    
+
         if (index >= 0 && index < sortedItems.size()) {
             Item item = sortedItems.get(index);
-            item.use(player);
-    
-            if (item instanceof Usable) {
-                items.remove(item);
+            System.out.println("\n> " + item.getName());
+            System.out.println("Choose an action:");
+            String equipOrUse = "";
+            if (item instanceof Equipment) {
+                Equipment equipment = (Equipment) item;
+                equipOrUse = equipment.isEquipped() ? "Unequip" : "Equip";
+            } else {
+                equipOrUse = "Use";
             }
+            System.out.println("[1] " + equipOrUse);
+            System.out.println("[2] Remove");
+
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            if (choice == 1) {
+                item.use(player);
+                if (item instanceof Usable) {
+                    items.remove(item);
+                }
+            } else if (choice == 2) {
+                if (item instanceof Equipment) {
+                    Equipment equipment = (Equipment) item;
+                    if (equipment.isEquipped()) {
+                        player.equipItem(equipment);
+                    }
+                }
+                removeItem(index);
+            } else {
+                System.out.println("Invalid choice!");
+            } 
+        } else {
+            System.out.println("Invalid choice!");
+        }
+        UserInterface.enterReturn();
+    }
+
+    public void removeItem(int index) {
+        sortInventory();
+        if (index >= 0 && index < sortedItems.size()) {
+            Item item = sortedItems.get(index);
+            items.remove(item);
+            System.out.println("> " + item.getName() + " has been removed from your inventory.");
         } else {
             System.out.println("Invalid index! Choose a valid item number.");
-            UserInterface.enterReturn();
         }
     }
-    
-
-    // public void removeItem(int index) {
-    //     if (index >= 0 && index < items.size()) {
-    //         System.out.println(items.get(index).getName() + " has been removed from your inventory.");
-    //         items.remove(index);
-    //     } else {
-    //         System.out.println("Invalid index! Choose a valid item number.");
-    //     }
-    // }
 
     public boolean isEmpty() {
         return items.isEmpty();
