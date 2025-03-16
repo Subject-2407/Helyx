@@ -12,11 +12,11 @@ import com.steven.helyx.locations.Area;
 import com.steven.helyx.utilities.UserInterface;
 
 public class Main {
-    private static String version = "v0.1.0 alpha";
+    private static String version = "v0.1.2 alpha";
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         UserInterface.clearConsole();
-        System.out.println("==== Helyx " + version + " ====\nA simple text-based RPG game.");
+        System.out.println("==== Helyx " + version + " ====\nA simple turn-based RPG game.");
         System.out.printf("\nEnter your name: ");
         String playerName = scanner.nextLine();
         Player player = new Player(playerName, new Class("Novice", "Where everything begins.", 0, 0, 0, 0));
