@@ -22,6 +22,11 @@ public class Usable extends Item {
     }
 
     @Override
+    public Usable clone() {
+        return new Usable(name, description, price, type, bonusPoints);
+    }
+
+    @Override
     public void use(Player player) {
         System.out.println("> You used a " + this.getName() + ".");
 

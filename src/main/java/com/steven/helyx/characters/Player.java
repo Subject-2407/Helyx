@@ -33,7 +33,7 @@ public class Player {
         this.playerClass = playerClass;
         this.level = 1;
         this.xp = 0;
-        this.gold = 100;
+        this.gold = 1000;
         this.maxEnergy = 10;
         this.currentEnergy = maxEnergy;
         this.playerStats = new LinkedHashMap<>();
@@ -105,23 +105,57 @@ public class Player {
         return baseDamage;
     }
 
-    public void equipItem(Equipment equipment) {
-        if (equipment == equippedWeapon) {
-            equippedWeapon = null;
-            System.out.println("> You unequipped " + equipment.getName() + ".");
-            UserInterface.enterReturn();
-        } else if (equipment == equippedArmor) {
-            equippedArmor = null;
-            System.out.println("> You unequipped " + equipment.getName() + ".");
-            UserInterface.enterReturn();
-        } else {
-            switch (equipment.getType()) {
-                case 1: equippedWeapon = equipment; break;
-                case 2: equippedArmor = equipment; break;
-            }
-            System.out.println("> You equipped " + equipment.getName() + ".");
-            UserInterface.enterReturn();
+    public void equipItem(Equipment newEquipment) {
+        if (newEquipment == null) return;
+
+        switch (newEquipment.getType()) {
+            case 1: // weapon
+                if (equippedWeapon != null) {
+                    equippedWeapon.unequip();
+                    System.out.println("> You unequipped " + equippedWeapon.getName() + ".");
+                }
+                if (equippedWeapon == newEquipment) {
+                    equippedWeapon = null;
+                } else {
+                    equippedWeapon = newEquipment;
+                    equippedWeapon.equip();
+                    System.out.println("> You equipped " + equippedWeapon.getName() + ".");
+                }
+                break;
+            case 2: // armor
+                if (equippedArmor != null) {
+                    equippedArmor.unequip();
+                    System.out.println("> You unequipped " + equippedArmor.getName() + ".");
+                }
+                if (equippedArmor == newEquipment) {
+                    equippedArmor = null;
+                } else {
+                    equippedArmor = newEquipment;
+                    equippedArmor.equip();
+                    System.out.println("> You equipped " + equippedArmor.getName() + ".");
+                }
+                break;
+            default:
+                System.out.println("> This item can't be equipped.");
         }
+
+        UserInterface.enterReturn();
+        // if (equipment == equippedWeapon) {
+        //     equippedWeapon = null;
+        //     System.out.println("> You unequipped " + equipment.getName() + ".");
+        //     UserInterface.enterReturn();
+        // } else if (equipment == equippedArmor) {
+        //     equippedArmor = null;
+        //     System.out.println("> You unequipped " + equipment.getName() + ".");
+        //     UserInterface.enterReturn();
+        // } else {
+        //     switch (equipment.getType()) {
+        //         case 1: equippedWeapon = equipment; break;
+        //         case 2: equippedArmor = equipment; break;
+        //     }
+        //     System.out.println("> You equipped " + equipment.getName() + ".");
+        //     UserInterface.enterReturn();
+        // }
     }
 
     public Equipment getEquippedWeapon() {

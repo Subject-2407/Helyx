@@ -6,12 +6,15 @@ import com.steven.helyx.utilities.UserInterface;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Inventory {
     private List<Item> items;
+    private Scanner scanner;
 
     public Inventory() {
         this.items = new ArrayList<>();
+        this.scanner = new Scanner(System.in);
     }
 
     public void addItem(Item item) {
@@ -19,7 +22,26 @@ public class Inventory {
         System.out.println("> " + item.getName() + " has been added to your inventory.");
     }
 
-    public void showInventory(Player player) {
+    public void showMenu(Player player) {
+        boolean inInventoryMenu = true;
+        while (inInventoryMenu) {
+            player.displayInfo();
+            showInventory();
+            System.out.println("\n[0] Return to Main Menu");
+            System.out.print("\nEnter your choice: ");
+            int choice = scanner.nextInt() - 1;
+            scanner.nextLine();
+
+            if (choice == -1) {
+                inInventoryMenu = false;
+                break;
+            } else {
+                useItem(choice, player);
+            }
+        }
+    }
+
+    private void showInventory() {
         System.out.println("==== Inventory ====\n");
         if (items.isEmpty()) {
             System.out.println("Your inventory is empty.");
@@ -32,7 +54,7 @@ public class Inventory {
                 if (item instanceof Equipment) {
                     Equipment equip = (Equipment) item;
                     equipmentStats = " [ATK: " + equip.getAttackBonus() + ", DEF: " + equip.getDefenseBonus() + "]";
-                    if (equip == player.getEquippedWeapon() || equip == player.getEquippedArmor()) {
+                    if (equip.isEquipped()) {
                         equippedIndicator = " (EQUIPPED)";
                     }
                 }
@@ -42,7 +64,7 @@ public class Inventory {
         }
     }
 
-    public void useItem(int index, Player player) {
+    private void useItem(int index, Player player) {
         if (index >= 0 && index < items.size()) {
             Item item = items.get(index);
             item.use(player);

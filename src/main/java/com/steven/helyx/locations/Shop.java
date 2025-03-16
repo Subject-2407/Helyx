@@ -50,8 +50,10 @@ public class Shop extends Place{
         int price = item.getPrice();
         if (player.getGolds() >= price) {
             player.takeGold(price);
-            System.out.println("> You bought " + item.getName() + " for " + price + " Gold!");
-            inventory.addItem(item);
+            Item newItem = item.clone();
+
+            System.out.println("> You bought " + newItem.getName() + " for " + price + " Gold!");
+            inventory.addItem(newItem);
             UserInterface.enterReturn();
         } else {
             System.out.println("> You don't have enough gold to buy it!");

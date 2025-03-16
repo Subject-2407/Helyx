@@ -58,22 +58,7 @@ public class Main {
             
             switch (mainChoice) {
                 case 2:
-                    boolean inInventoryMenu = true;
-                    while (inInventoryMenu) {
-                        player.displayInfo();
-                        inventory.showInventory(player);
-                        System.out.println("\n[0] Return to Main Menu");
-                        System.out.print("\nEnter your choice: ");
-                        int inventoryChoice = scanner.nextInt() - 1;
-                        scanner.nextLine();
-
-                        if (inventoryChoice == -1) {
-                            inInventoryMenu = false;
-                            break;
-                        } else {
-                            inventory.useItem(inventoryChoice, player);
-                        }
-                    }
+                    inventory.showMenu(player);
                     break;
                 case 1:
                     boolean inTravelMenu = true;
