@@ -28,18 +28,7 @@ public class Usable extends Item {
 
     @Override
     public void use(Player player) {
-        System.out.println("> You used a " + this.getName() + ".");
-
-        switch (this.type) {
-            case 1: player.addHP(this.bonusPoints); break;
-            case 2: player.gainEnergy(this.bonusPoints); break;
-            case 3: 
-                player.addHP(this.bonusPoints);
-                double energyGain = this.bonusPoints * 0.1; 
-                player.gainEnergy((int)energyGain); break;
-        }
-
-        UserInterface.enterReturn();
+        player.useItem(this);
     }
     
 }

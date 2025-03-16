@@ -140,22 +140,21 @@ public class Player {
         }
 
         UserInterface.enterReturn();
-        // if (equipment == equippedWeapon) {
-        //     equippedWeapon = null;
-        //     System.out.println("> You unequipped " + equipment.getName() + ".");
-        //     UserInterface.enterReturn();
-        // } else if (equipment == equippedArmor) {
-        //     equippedArmor = null;
-        //     System.out.println("> You unequipped " + equipment.getName() + ".");
-        //     UserInterface.enterReturn();
-        // } else {
-        //     switch (equipment.getType()) {
-        //         case 1: equippedWeapon = equipment; break;
-        //         case 2: equippedArmor = equipment; break;
-        //     }
-        //     System.out.println("> You equipped " + equipment.getName() + ".");
-        //     UserInterface.enterReturn();
-        // }
+    }
+
+    public void useItem(Usable usableItem) {
+        System.out.println("> You used a " + usableItem.getName() + ".");
+
+        switch (usableItem.getType()) {
+            case 1: addHP(usableItem.getBonusPoints()); break;
+            case 2: gainEnergy(usableItem.getBonusPoints()); break;
+            case 3: 
+                addHP(usableItem.getBonusPoints());
+                double energyGain = usableItem.getBonusPoints() * 0.1; 
+                gainEnergy((int)energyGain); break;
+        }
+
+        UserInterface.enterReturn();
     }
 
     public Equipment getEquippedWeapon() {
