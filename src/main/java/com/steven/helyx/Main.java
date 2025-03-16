@@ -94,7 +94,7 @@ public class Main {
                     player.displayStatsMenu(scanner);
                     break;
                 case 4:
-                    classMenu(player);
+                    Class.classMenu(player);
                     break;
                 case 5:
                     System.out.println("Exiting the game...");
@@ -107,29 +107,5 @@ public class Main {
         
         System.out.println("Game Over..");
         scanner.close();
-    }
-
-    private static void classMenu(Player player) {
-        Scanner scanner = new Scanner(System.in);
-        Class playerClass = player.getCurrentClass();
-        boolean inClassMenu = true;
-        while (inClassMenu) {
-            player.displayInfo();
-            System.out.println("==== " + playerClass.getName() + " Class ====");
-            System.out.println(playerClass.getDescription() + "\n");
-            System.out.println("Strength: +" + playerClass.getStrengthBonus());
-            System.out.println("Defense: +" + playerClass.getDefenseBonus());
-            System.out.println("Dexterity: +" + playerClass.getDexterityBonus());
-            System.out.println("\n[0] Return to Main Menu\n");
-
-            System.out.print("Enter your choice: ");
-            int choice = scanner.nextInt();
-            if (choice == 0) {
-                inClassMenu = false;
-            } else {
-                System.out.println("Invalid choice!");
-                UserInterface.enterReturn();
-            }
-        }
     }
 }
