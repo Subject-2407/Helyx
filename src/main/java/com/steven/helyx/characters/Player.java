@@ -39,8 +39,8 @@ public class Player {
         this.playerStats = new LinkedHashMap<>();
 
         playerStats.put("Strength", 5); // base damage
-        playerStats.put("Dexterity", 5); // critical chance & evasion
         playerStats.put("Defense", 5); // base defense
+        playerStats.put("Dexterity", 5); // critical chance & evasion
         playerStats.put("Constitution", 0); // increases health
         this.playerPoints = 2;
 
