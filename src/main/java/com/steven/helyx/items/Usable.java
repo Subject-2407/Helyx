@@ -1,7 +1,6 @@
 package com.steven.helyx.items;
 
 import com.steven.helyx.characters.*;
-import com.steven.helyx.utilities.*;
 
 public class Usable extends Item {
     private int type; // 1: Health Potion, 2: Energy Potion, 3: Golden Potion
