@@ -10,6 +10,7 @@ import java.util.Scanner;
 
 public class Inventory {
     private List<Item> items;
+    private List<Item> sortedItems;
     private Scanner scanner;
 
     public Inventory() {
@@ -19,8 +20,27 @@ public class Inventory {
 
     public void addItem(Item item) {
         items.add(item);
+        sortInventory();
         System.out.println("> " + item.getName() + " has been added to your inventory.");
     }
+
+    private void sortInventory() {
+        List<Item> equipments = new ArrayList<>();
+        List<Item> usables = new ArrayList<>();
+    
+        for (Item item : items) {
+            if (item instanceof Equipment) {
+                equipments.add(item);
+            } else {
+                usables.add(item);
+            }
+        }
+    
+        sortedItems = new ArrayList<>();
+        sortedItems.addAll(equipments);
+        sortedItems.addAll(usables);
+    }
+    
 
     public void showMenu(Player player) {
         boolean inInventoryMenu = true;
@@ -43,49 +63,58 @@ public class Inventory {
 
     private void showInventory() {
         System.out.println("==== Inventory ====\n");
+    
         if (items.isEmpty()) {
             System.out.println("Your inventory is empty.");
-        } else {
-            for (int i = 0; i < items.size(); i++) {
-                Item item = items.get(i);
-                String equippedIndicator = "";
-                String equipmentStats = "";
-
-                if (item instanceof Equipment) {
-                    Equipment equip = (Equipment) item;
-                    equipmentStats = " [ATK: " + equip.getAttackBonus() + ", DEF: " + equip.getDefenseBonus() + "]";
-                    if (equip.isEquipped()) {
-                        equippedIndicator = " (EQUIPPED)";
-                    }
+            return;
+        }
+    
+        sortInventory();
+    
+        for (int i = 0; i < sortedItems.size(); i++) {
+            Item item = sortedItems.get(i);
+            String equippedIndicator = "";
+            String equipmentStats = "";
+    
+            if (item instanceof Equipment) {
+                Equipment equip = (Equipment) item;
+                equipmentStats = " [ATK: " + equip.getAttackBonus() + ", DEF: " + equip.getDefenseBonus() + "]";
+                if (equip.isEquipped()) {
+                    equippedIndicator = " (EQUIPPED)";
                 }
-
-                System.out.println("[" + (i + 1) + "] " + item.getName() + " - " + item.getDescription() + equipmentStats +  equippedIndicator);
             }
+    
+            System.out.println("[" + (i + 1) + "] " + item.getName() + " - " + item.getDescription() + equipmentStats + equippedIndicator);
         }
     }
+    
+    
 
     private void useItem(int index, Player player) {
-        if (index >= 0 && index < items.size()) {
-            Item item = items.get(index);
+        sortInventory();
+    
+        if (index >= 0 && index < sortedItems.size()) {
+            Item item = sortedItems.get(index);
             item.use(player);
-
-            if (item instanceof com.steven.helyx.items.Usable) {
-                items.remove(index);
+    
+            if (item instanceof Usable) {
+                items.remove(item);
             }
         } else {
             System.out.println("Invalid index! Choose a valid item number.");
             UserInterface.enterReturn();
         }
     }
+    
 
-    public void removeItem(int index) {
-        if (index >= 0 && index < items.size()) {
-            System.out.println(items.get(index).getName() + " has been removed from your inventory.");
-            items.remove(index);
-        } else {
-            System.out.println("Invalid index! Choose a valid item number.");
-        }
-    }
+    // public void removeItem(int index) {
+    //     if (index >= 0 && index < items.size()) {
+    //         System.out.println(items.get(index).getName() + " has been removed from your inventory.");
+    //         items.remove(index);
+    //     } else {
+    //         System.out.println("Invalid index! Choose a valid item number.");
+    //     }
+    // }
 
     public boolean isEmpty() {
         return items.isEmpty();
