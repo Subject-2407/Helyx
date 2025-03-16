@@ -13,7 +13,7 @@ import java.util.Scanner;
 
 public class Player {
     private String name;
-    private String playerClass;
+    private Class playerClass;
     private int level;
     private int xp;
     private int gold;
@@ -28,7 +28,7 @@ public class Player {
     private Inventory inventory;
     private Random random;
 
-    public Player(String name, String playerClass) {
+    public Player(String name, Class playerClass) {
         this.name = name;
         this.playerClass = playerClass;
         this.level = 1;
@@ -76,7 +76,7 @@ public class Player {
     public void displayInfo() {
         UserInterface.clearConsole();
         System.out.println("========================");
-        System.out.println(name + " (" + playerClass + " Class)");
+        System.out.println(name + " (" + playerClass.getName() + " Class)");
         System.out.println("Level: " + level + " (XP: " + xp + "/" + level * 100 + ")");
         System.out.println("HP: " + currentHP + "/" + maxHP + "  Gold: " + gold);
         System.out.println("Energy: " + currentEnergy + "/" + maxEnergy);
@@ -87,24 +87,19 @@ public class Player {
         return currentHP > 0;
     }
 
-    public int attack() {
-        int strength = playerStats.get("Strength");
-        int dexterity = playerStats.get("Dexterity") <= 20 ? playerStats.get("Dexterity") : 20;
-        int weaponDamage = equippedWeapon != null ? equippedWeapon.getAttackBonus() : 0;
-
-        // base damage
-        int baseDamage = strength + weaponDamage;
-
-        // critical chance
-        boolean isCritical = random.nextInt(100) < dexterity * 2;
-        if (isCritical) {
-            System.out.println(">> !! Critical Hit !!");
-            return baseDamage * 2;
-        }
-
-        return baseDamage;
+    public Class getCurrentClass() {
+        return playerClass;
     }
 
+    public void changeClass(Class newClass) {
+        if (newClass != playerClass) {
+            playerClass = newClass;
+            System.out.println("> You changed your class to " + newClass.getName() + "!");
+        } else {
+            System.out.println("> You've chosen this class already!");
+        }
+    }
+    
     public void equipItem(Equipment newEquipment) {
         if (newEquipment == null) return;
 
@@ -165,6 +160,18 @@ public class Player {
         return equippedArmor;
     }
 
+    public int getStrength() {
+        return playerStats.get("Strength") + playerClass.getStrengthBonus();
+    }
+
+    public int getDefense() {
+        return playerStats.get("Defense") + playerClass.getDefenseBonus();
+    }
+
+    public int getDexterity() {
+        return playerStats.get("Dexterity") + playerClass.getDexterityBonus();
+    }
+
     public int getEnergy() {
         return currentEnergy;
     }
@@ -205,11 +212,6 @@ public class Player {
         return playerStats.get(stats);
     }
 
-    public int getBaseDefense() {
-        int additionalDefense = equippedArmor != null ? equippedArmor.getDefenseBonus() : 0;
-        return playerStats.get("Defense") + additionalDefense;
-    }
-
     public int getCurrentHP() {
         return currentHP;
     }
@@ -228,10 +230,28 @@ public class Player {
         if (currentHP > maxHP) currentHP = maxHP;
     }
 
+    public int attack() {
+        int strength = getStrength();
+        int dexterity = Math.min(getDexterity(), 20);
+        int weaponDamage = equippedWeapon != null ? equippedWeapon.getAttackBonus() : 0;
+
+        // base damage
+        int baseDamage = strength + weaponDamage;
+
+        // critical chance
+        boolean isCritical = random.nextInt(100) < dexterity * 2;
+        if (isCritical) {
+            System.out.println("> !! Critical Hit !!");
+            return baseDamage * 2;
+        }
+
+        return baseDamage;
+    }
+
     public int takeDamage(int rawDamage) { // armor def contributes 60%, weapon def contributes 30%, player def contributes 10%
         int armorDefense = equippedArmor != null ? equippedArmor.getDefenseBonus() : 0;
         int weaponDefense = equippedWeapon != null ? equippedWeapon.getDefenseBonus() : 0;
-        int playerDefense = playerStats.get("Defense");
+        int playerDefense = getDefense();
         double reductionPercentage = ((armorDefense * 0.6) + (weaponDefense * 0.3) + (playerDefense * 0.1)) / (rawDamage + 1);
         int finalDamage = Math.max(1, (int) (rawDamage * (1 - reductionPercentage)));
         currentHP -= finalDamage;
@@ -260,19 +280,28 @@ public class Player {
     }
 
     public void displayStatsMenu(Scanner scanner) {
+        int strengthBonus = playerClass.getStrengthBonus() + (equippedWeapon != null ? equippedWeapon.getAttackBonus() : 0);
+        int defenseBonus = playerClass.getDefenseBonus() + (equippedArmor != null ? equippedArmor.getDefenseBonus() : 0);
+        int dexterityBonus = playerClass.getDexterityBonus();
+        String additionalStrength = strengthBonus > 0 ? " (+" + strengthBonus + ")" : "";
+        String additionalDefense = defenseBonus > 0 ? " (+" + defenseBonus + ")" : "";
+        String additionalDexterity = dexterityBonus > 0 ? " (+" + dexterityBonus + ")" : "";
         boolean inStatsMenu = true;
         while (inStatsMenu) {
             displayInfo();
             System.out.println("==== Stats ====");
+            System.out.println("*) Class and Equipments can give stat bonus.");
             System.out.println("Player Points: " + playerPoints);
             System.out.println();
             int i = 0; for (String stat : playerStats.keySet()) {
                 i++;
                 System.out.print("["+ i +"] " + stat + ": " + playerStats.get(stat));
-                if (stat.equals("Strength") && equippedWeapon != null) {
-                    System.out.println(" (+"+ equippedWeapon.getAttackBonus() +")");
-                } else if (stat.equals("Defense") && equippedArmor != null) {
-                    System.out.println(" (+"+ equippedArmor.getDefenseBonus() +")");
+                if (stat.equals("Strength")) {
+                    System.out.println(additionalStrength);
+                } else if (stat.equals("Defense")) {
+                    System.out.println(additionalDefense);
+                } else if (stat.equals("Dexterity")) {
+                    System.out.println(additionalDexterity);
                 } else System.out.println();
             }
             System.out.println("\n[0] Return to Main Menu");

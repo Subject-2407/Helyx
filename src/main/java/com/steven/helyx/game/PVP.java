@@ -98,7 +98,7 @@ public class PVP {
 
     public static boolean attemptEscape(Player player, Monster monster) {
         // get both dexterity
-        int playerDexterity = player.getStats("Dexterity");
+        int playerDexterity = player.getDexterity();
         int monsterDexterity = monster.getDexterity();
 
         // calculate escape chance
@@ -144,7 +144,7 @@ public class PVP {
         // get monster attack attribute
         int monsterAttack = monster.getBaseAttack();
         // get player attributes
-        int playerDefense = player.getStats("Defense");
+        int playerDefense = player.getDefense();
         int weaponDefense = player.getEquippedWeapon() != null ? player.getEquippedWeapon().getDefenseBonus() : 0;
 
         // calculate block chance
@@ -158,7 +158,7 @@ public class PVP {
 
     private static int playerHitChance(Player player, Monster monster) {
         // get both dexterity
-        int playerDexterity = player.getStats("Dexterity");
+        int playerDexterity = player.getDexterity();
         int monsterDexterity = monster.getDexterity();
 
         // calculate hit chance
@@ -175,7 +175,7 @@ public class PVP {
     private static int monsterHitChance(Monster monster, Player player) {
         // get both dexterity
         int monsterDexterity = monster.getDexterity();
-        int playerDexterity = player.getStats("Dexterity");
+        int playerDexterity = player.getDexterity();
 
         // calculate hit chance
         int hitChance = 75 + (monsterDexterity - playerDexterity) * 2;

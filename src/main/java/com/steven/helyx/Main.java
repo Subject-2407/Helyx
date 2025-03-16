@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import com.steven.helyx.characters.*;
+import com.steven.helyx.characters.Class;
+import com.steven.helyx.database.ClassDatabase;
 import com.steven.helyx.database.MonsterDatabase;
 import com.steven.helyx.game.*;
 import com.steven.helyx.items.*;
 import com.steven.helyx.locations.Area;
 import com.steven.helyx.locations.Dungeon;
 import com.steven.helyx.locations.Forest;
+import com.steven.helyx.locations.Guild;
 import com.steven.helyx.locations.Shop;
 import com.steven.helyx.locations.Tavern;
 import com.steven.helyx.utilities.UserInterface;
@@ -22,7 +25,7 @@ public class Main {
         System.out.println("==== Helyx " + version + " ====\nA simple text-based RPG game.");
         System.out.printf("\nEnter your name: ");
         String playerName = scanner.nextLine();
-        Player player = new Player(playerName, "Novice");
+        Player player = new Player(playerName, new Class("Novice", "Where everything begins.", 0, 0, 0, 0));
         Inventory inventory = player.getInventory();
 
         System.out.println("\nGood luck out there adventurer, you will begin as a Novice class with an Iron Sword and 2 health potions in your inventory.");
@@ -47,6 +50,7 @@ public class Main {
         // render places
         eldoria.addPlace(new Tavern("Moonlit Ember", "A warm and elegant inn. (Restore health & energy for 40 gold)", 40));
         eldoria.addPlace(new Shop("Emberforge", "We sell best quality equipments and items! (Shop)", emberforgeItems));
+        eldoria.addPlace(new Guild("Stormbringers", "A guild known for its powerful warriors who bring chaos to battle. (Guild)", ClassDatabase.beginnerClasses()));
         eldoria.addPlace(new Forest("Eldertree", "Home to a massive ancient tree said to contain untold wisdom. (Forest)", 1));
         eldoria.addPlace(new Dungeon("Churenim Cavern", "A deep cavern where the cries of the lost echo eternally. (Dungeon)", 2, MonsterDatabase.dungeonMonsters()));
 
@@ -55,7 +59,8 @@ public class Main {
             System.out.println("[1] Travel");
             System.out.println("[2] Inventory");
             System.out.println("[3] Stats");
-            System.out.println("[4] Exit Game");
+            System.out.println("[4] Class Info");
+            System.out.println("[5] Exit Game");
             System.out.print("\nEnter your choice: ");
             int mainChoice = scanner.nextInt();
             scanner.nextLine();
@@ -96,6 +101,9 @@ public class Main {
                     player.displayStatsMenu(scanner);
                     break;
                 case 4:
+                    classMenu(player);
+                    break;
+                case 5:
                     System.out.println("Exiting the game...");
                     scanner.close();
                     return;
@@ -106,5 +114,29 @@ public class Main {
         
         System.out.println("Game Over..");
         scanner.close();
+    }
+
+    private static void classMenu(Player player) {
+        Scanner scanner = new Scanner(System.in);
+        Class playerClass = player.getCurrentClass();
+        boolean inClassMenu = true;
+        while (inClassMenu) {
+            player.displayInfo();
+            System.out.println("==== " + playerClass.getName() + " Class ====");
+            System.out.println(playerClass.getDescription() + "\n");
+            System.out.println("Strength: +" + playerClass.getStrengthBonus());
+            System.out.println("Defense: +" + playerClass.getDefenseBonus());
+            System.out.println("Dexterity: +" + playerClass.getDexterityBonus());
+            System.out.println("\n[0] Return to Main Menu\n");
+
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            if (choice == 0) {
+                inClassMenu = false;
+            } else {
+                System.out.println("Invalid choice!");
+                UserInterface.enterReturn();
+            }
+        }
     }
 }

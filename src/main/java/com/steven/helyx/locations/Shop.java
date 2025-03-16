@@ -53,11 +53,10 @@ public class Shop extends Place{
             Item newItem = item.clone();
 
             System.out.println("> You bought " + newItem.getName() + " for " + price + " Gold!");
-            inventory.addItem(newItem);
-            UserInterface.enterReturn();
+            inventory.addItem(newItem);       
         } else {
             System.out.println("> You don't have enough gold to buy it!");
-            UserInterface.enterReturn();
         }
+        UserInterface.enterReturn();
     }
 }
