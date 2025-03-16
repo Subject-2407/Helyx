@@ -33,7 +33,7 @@ public class Player {
         this.playerClass = playerClass;
         this.level = 1;
         this.xp = 0;
-        this.gold = 1000;
+        this.gold = 100;
         this.maxEnergy = 10;
         this.currentEnergy = maxEnergy;
         this.playerStats = new LinkedHashMap<>();
