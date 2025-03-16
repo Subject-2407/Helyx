@@ -14,6 +14,7 @@ and more things are coming in the future..
 ## v0.1.0 Changelog
 ### New
 - Class System 
+
 You can now choose classes like Warrior, Rogue, Guardian, etc. It currently only has physical-related classes since I have not yet implemented spell/magical mechanics.
 
 ## v0.0.17 Changelog
