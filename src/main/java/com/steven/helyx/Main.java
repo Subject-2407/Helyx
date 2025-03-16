@@ -6,18 +6,9 @@ import java.util.Scanner;
 import com.steven.helyx.characters.*;
 import com.steven.helyx.characters.Class;
 import com.steven.helyx.database.AreaDatabase;
-import com.steven.helyx.database.ClassDatabase;
-import com.steven.helyx.database.ItemDatabase;
-import com.steven.helyx.database.MonsterDatabase;
-import com.steven.helyx.database.PlaceDatabase;
 import com.steven.helyx.game.*;
 import com.steven.helyx.items.*;
 import com.steven.helyx.locations.Area;
-import com.steven.helyx.locations.Dungeon;
-import com.steven.helyx.locations.Forest;
-import com.steven.helyx.locations.Guild;
-import com.steven.helyx.locations.Shop;
-import com.steven.helyx.locations.Tavern;
 import com.steven.helyx.utilities.UserInterface;
 
 public class Main {
