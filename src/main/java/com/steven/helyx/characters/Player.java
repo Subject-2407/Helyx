@@ -146,8 +146,6 @@ public class Player {
                 double energyGain = usableItem.getBonusPoints() * 0.1; 
                 gainEnergy((int)energyGain); break;
         }
-
-        UserInterface.enterReturn();
     }
 
     public Equipment getEquippedWeapon() {

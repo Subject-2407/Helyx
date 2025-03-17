@@ -1,6 +1,5 @@
-package com.steven.helyx.game;
+package com.steven.helyx.characters;
 
-import com.steven.helyx.characters.*;
 import com.steven.helyx.items.*;
 import com.steven.helyx.utilities.UserInterface;
 
@@ -41,7 +40,81 @@ public class Inventory {
         sortedItems.addAll(usables);
     }
     
-
+    public void showMenu2(Player player) {
+        final int ITEMS_PER_PAGE = 7;
+         // Ensure sortedItems is updated
+        int totalPages = (int) Math.ceil((double) sortedItems.size() / ITEMS_PER_PAGE);
+        int currentPage = 1;
+    
+        while (true) {
+            player.displayInfo();
+            sortInventory();
+            totalPages = (int) Math.ceil((double) sortedItems.size() / ITEMS_PER_PAGE);
+            System.out.println("==== Inventory (Page " + currentPage + "/" + totalPages + ") ====\n");
+    
+            // Determine the item range for this page
+            int start = (currentPage - 1) * ITEMS_PER_PAGE;
+            int end = Math.min(start + ITEMS_PER_PAGE, sortedItems.size());
+    
+            if (sortedItems.isEmpty()) {
+                System.out.println("Your inventory is empty.");
+            } else {
+                for (int i = start; i < end; i++) {
+                    Item item = sortedItems.get(i);
+                    int displayIndex = (i - start) + 1; // Reset index per page
+                    String equippedIndicator = "";
+                    String equipmentStats = "";
+    
+                    if (item instanceof Equipment) {
+                        Equipment equip = (Equipment) item;
+                        equipmentStats = " [ATK: " + equip.getAttackBonus() + ", DEF: " + equip.getDefenseBonus() + "]";
+                        if (equip.isEquipped()) {
+                            equippedIndicator = " (EQUIPPED)";
+                        }
+                    }
+    
+                    System.out.println("[" + displayIndex + "] " + item.getName() + " - " + item.getDescription() + equipmentStats + equippedIndicator);
+                }
+            }
+    
+            System.out.println();
+            if (currentPage > 1) {
+                System.out.println("[P] Previous Page");
+            }
+            if (currentPage < totalPages) {
+                System.out.println("[N] Next Page");
+            }
+            System.out.println("[0] Return to Main Menu");
+    
+            System.out.print("\nEnter your choice: ");
+            String input = scanner.nextLine().trim().toLowerCase();
+    
+            if (input.equals("0")) {
+                break;
+            } else if (input.equals("p") && currentPage > 1) {
+                currentPage--;
+            } else if (input.equals("n") && currentPage < totalPages) {
+                currentPage++;
+            } else {
+                try {
+                    int itemChoice = Integer.parseInt(input);
+                    int selectedIndex = start + (itemChoice - 1);
+    
+                    if (selectedIndex >= start && selectedIndex < end) {
+                        useItem(selectedIndex, player);
+                    } else {
+                        System.out.println("Invalid choice! Please pick an available item.");
+                        UserInterface.enterReturn();
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input! Enter a number or use P/N for pagination.");
+                    UserInterface.enterReturn();
+                }
+                
+            }
+        }
+    }
+    
     public void showMenu(Player player) {
         boolean inInventoryMenu = true;
         while (inInventoryMenu) {
@@ -104,8 +177,7 @@ public class Inventory {
             } else {
                 equipOrUse = "Use";
             }
-            System.out.println("[1] " + equipOrUse);
-            System.out.println("[2] Remove");
+            System.out.println("[1] " + equipOrUse + " | [2] Remove | [3] Cancel\n");
 
             System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
@@ -123,7 +195,7 @@ public class Inventory {
                 }
                 removeItem(index);
             } else {
-                System.out.println("Invalid choice!");
+                return;
             } 
         } else {
             System.out.println("Invalid choice!");

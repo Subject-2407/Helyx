@@ -30,6 +30,8 @@ public class Main {
         inventory.addItem(new Usable("Health Potion", "Adds 50 HP.",40, 1, 50));
         inventory.addItem(new Usable("Health Potion", "Adds 50 HP.",40, 1, 50));
 
+        player.gainGold(10000);
+
         // render area
         ArrayList<Area> beginnerAreas = AreaDatabase.beginnerAreas();
 
@@ -46,7 +48,7 @@ public class Main {
             
             switch (mainChoice) {
                 case 2:
-                    inventory.showMenu(player);
+                    inventory.showMenu2(player);
                     break;
                 case 1:
                     travelMenu(beginnerAreas, player, scanner);

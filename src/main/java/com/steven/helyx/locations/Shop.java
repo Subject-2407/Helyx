@@ -1,7 +1,7 @@
 package com.steven.helyx.locations;
 
+import com.steven.helyx.characters.Inventory;
 import com.steven.helyx.characters.Player;
-import com.steven.helyx.game.Inventory;
 import com.steven.helyx.items.*;
 import com.steven.helyx.utilities.UserInterface;
 
