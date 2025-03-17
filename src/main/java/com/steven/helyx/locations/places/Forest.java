@@ -1,6 +1,7 @@
-package com.steven.helyx.locations;
+package com.steven.helyx.locations.places;
 
 import com.steven.helyx.characters.*;
+import com.steven.helyx.locations.Place;
 import com.steven.helyx.utilities.UserInterface;
 
 public class Forest extends Place{

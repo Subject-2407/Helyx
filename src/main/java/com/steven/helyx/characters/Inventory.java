@@ -42,7 +42,6 @@ public class Inventory {
     
     public void showMenu2(Player player) {
         final int ITEMS_PER_PAGE = 7;
-         // Ensure sortedItems is updated
         int totalPages = (int) Math.ceil((double) sortedItems.size() / ITEMS_PER_PAGE);
         int currentPage = 1;
     
@@ -50,9 +49,8 @@ public class Inventory {
             player.displayInfo();
             sortInventory();
             totalPages = (int) Math.ceil((double) sortedItems.size() / ITEMS_PER_PAGE);
-            System.out.println("==== Inventory (Page " + currentPage + "/" + totalPages + ") ====\n");
-    
-            // Determine the item range for this page
+            System.out.println("========== Inventory (Page " + currentPage + "/" + totalPages + ") ==========\n");
+
             int start = (currentPage - 1) * ITEMS_PER_PAGE;
             int end = Math.min(start + ITEMS_PER_PAGE, sortedItems.size());
     
@@ -61,7 +59,7 @@ public class Inventory {
             } else {
                 for (int i = start; i < end; i++) {
                     Item item = sortedItems.get(i);
-                    int displayIndex = (i - start) + 1; // Reset index per page
+                    int displayIndex = (i - start) + 1;
                     String equippedIndicator = "";
                     String equipmentStats = "";
     
@@ -113,54 +111,7 @@ public class Inventory {
                 
             }
         }
-    }
-    
-    public void showMenu(Player player) {
-        boolean inInventoryMenu = true;
-        while (inInventoryMenu) {
-            player.displayInfo();
-            showInventory();
-            System.out.println("\n[0] Return to Main Menu");
-            System.out.print("\nEnter your choice: ");
-            int choice = scanner.nextInt() - 1;
-            scanner.nextLine();
-
-            if (choice == -1) {
-                inInventoryMenu = false;
-                break;
-            } else {
-                useItem(choice, player);
-            }
-        }
-    }
-
-    private void showInventory() {
-        System.out.println("==== Inventory ====\n");
-    
-        if (items.isEmpty()) {
-            System.out.println("Your inventory is empty.");
-            return;
-        }
-    
-        sortInventory();
-    
-        for (int i = 0; i < sortedItems.size(); i++) {
-            Item item = sortedItems.get(i);
-            String equippedIndicator = "";
-            String equipmentStats = "";
-    
-            if (item instanceof Equipment) {
-                Equipment equip = (Equipment) item;
-                equipmentStats = " [ATK: " + equip.getAttackBonus() + ", DEF: " + equip.getDefenseBonus() + "]";
-                if (equip.isEquipped()) {
-                    equippedIndicator = " (EQUIPPED)";
-                }
-            }
-    
-            System.out.println("[" + (i + 1) + "] " + item.getName() + " - " + item.getDescription() + equipmentStats + equippedIndicator);
-        }
-    }
-    
+    }    
 
     private void useItem(int index, Player player) {
         Scanner scanner = new Scanner(System.in);
@@ -169,7 +120,6 @@ public class Inventory {
         if (index >= 0 && index < sortedItems.size()) {
             Item item = sortedItems.get(index);
             System.out.println("\n> " + item.getName());
-            System.out.println("Choose an action:");
             String equipOrUse = "";
             if (item instanceof Equipment) {
                 Equipment equipment = (Equipment) item;

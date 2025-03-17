@@ -6,20 +6,23 @@ import java.util.Scanner;
 import com.steven.helyx.characters.*;
 import com.steven.helyx.characters.Class;
 import com.steven.helyx.database.AreaDatabase;
+import com.steven.helyx.database.ClassDatabase;
 import com.steven.helyx.game.*;
 import com.steven.helyx.items.*;
 import com.steven.helyx.locations.Area;
 import com.steven.helyx.utilities.UserInterface;
 
 public class Main {
-    private static String version = "v0.1.2 alpha";
+    private static String version = "v0.2.0 alpha";
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         UserInterface.clearConsole();
-        System.out.println("==== Helyx " + version + " ====\nA simple turn-based RPG game.");
-        System.out.printf("\nEnter your name: ");
+        System.out.println("========== Helyx " + version + " ==========");
+        System.out.println("     A simple turn-based RPG game.");
+        System.out.println("========================================");
+        System.out.printf("\n> Enter your name: ");
         String playerName = scanner.nextLine();
-        Player player = new Player(playerName, new Class("Novice", "Where everything begins.", 0, 0, 0, 0));
+        Player player = new Player(playerName, ClassDatabase.noviceClass());
         Inventory inventory = player.getInventory();
 
         System.out.println("\nGood luck out there adventurer, you will begin as a Novice class with an Iron Sword and 2 health potions in your inventory.");
@@ -29,8 +32,6 @@ public class Main {
         inventory.addItem(new Equipment("Wooden Sword", "A sword made of wood.", 50, 1, 10, 5));
         inventory.addItem(new Usable("Health Potion", "Adds 50 HP.",40, 1, 50));
         inventory.addItem(new Usable("Health Potion", "Adds 50 HP.",40, 1, 50));
-
-        player.gainGold(10000);
 
         // render area
         ArrayList<Area> beginnerAreas = AreaDatabase.beginnerAreas();
@@ -77,7 +78,7 @@ public class Main {
         while (inTravelMenu) {
             player.displayInfo();
             if (!player.isAlive()) { break; }
-            System.out.println("==== Travel to Area ====\n");
+            System.out.println("========== Travel to Area ==========\n");
 
             for (int i = 0; i < areas.size(); i++) {
                 Area area = areas.get(i);

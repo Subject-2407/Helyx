@@ -32,7 +32,7 @@ public class Area {
         boolean explore = true;
         while (explore && player.isAlive()) {
             player.displayInfo();
-            System.out.println("==== " + name + " ====");
+            System.out.println("========== " + name + " ==========");
             System.out.println(description + "\n");
 
             if (places == null) {
@@ -49,13 +49,16 @@ public class Area {
             int choice = scanner.nextInt();
             scanner.nextLine();
 
-            if (choice > 0 && choice <= places.size()) {
-                places.get(choice - 1).explore(player);
-            } else if (choice == 0) {
-                explore = false;
-            } else {
-                System.out.println("Invalid choice! Try again.");
-            }
+            if (places != null) {
+                if (choice > 0 && choice <= places.size()) {
+                    places.get(choice - 1).explore(player);
+                } else if (choice == 0) {
+                    explore = false;
+                } else {
+                    System.out.println("Invalid choice! Try again.");
+                }
+            } else explore = false;
+            
         }
     }
     

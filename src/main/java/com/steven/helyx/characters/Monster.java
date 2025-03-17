@@ -4,7 +4,8 @@ import java.util.Random;
 
 public class Monster {
     private String name;
-    private int hp;
+    private int currentHP;
+    private int maxHP;
     private int baseAttack;
     private int baseDexterity;
     private int baseDefense;
@@ -14,7 +15,8 @@ public class Monster {
 
     public Monster(String name, int hp, int baseAttack, int baseDexterity, int baseDefense, int expReward, int goldReward) {
         this.name = name;
-        this.hp = hp;
+        this.maxHP = hp;
+        this.currentHP = maxHP;
         this.baseAttack = baseAttack;
         this.baseDexterity = baseDexterity;
         this.baseDefense = baseDefense;
@@ -25,7 +27,8 @@ public class Monster {
 
     public Monster(Monster other) {
         this.name = other.name;
-        this.hp = other.hp;
+        this.maxHP = other.maxHP;
+        this.currentHP = other.maxHP;
         this.baseAttack = other.baseAttack;
         this.baseDexterity = other.baseDexterity;
         this.baseDefense = other.baseDefense;
@@ -39,7 +42,11 @@ public class Monster {
     }
 
     public int getHP() {
-        return hp;
+        return currentHP;
+    }
+
+    public int getMaxHP() {
+        return maxHP;
     }
 
     public int attack() {
@@ -55,8 +62,8 @@ public class Monster {
     public int takeDamage(int rawDamage) {
         int finalDamage = Math.max(rawDamage - baseDefense, 1);
         int damageDifference = rawDamage - finalDamage;
-        hp -= finalDamage;
-        if (hp < 0) hp = 0;
+        currentHP -= finalDamage;
+        if (currentHP < 0) currentHP = 0;
         return damageDifference;
     }
 
@@ -81,7 +88,7 @@ public class Monster {
     }
 
     public boolean isAlive() {
-        return hp > 0;
+        return currentHP > 0;
     }
 }
 

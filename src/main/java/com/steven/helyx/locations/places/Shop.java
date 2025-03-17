@@ -1,8 +1,9 @@
-package com.steven.helyx.locations;
+package com.steven.helyx.locations.places;
 
 import com.steven.helyx.characters.Inventory;
 import com.steven.helyx.characters.Player;
 import com.steven.helyx.items.*;
+import com.steven.helyx.locations.Place;
 import com.steven.helyx.utilities.UserInterface;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class Shop extends Place{
         boolean keepExploring = true;
         while (keepExploring && player.isAlive()) {
             player.displayInfo();
-            System.out.println("==== " + name + " Shop ====\n");
+            System.out.println("========== " + name + " Shop ==========\n");
             for (int i = 0; i < itemsForSale.size(); i++) {
                 Item item = itemsForSale.get(i);
                 System.out.println("[" + (i + 1) + "] " + item.getName() + " - " + item.getDescription() + " (" + item.getPrice() + " Gold)");

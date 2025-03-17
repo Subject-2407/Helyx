@@ -1,10 +1,15 @@
 package com.steven.helyx.database;
 
 import com.steven.helyx.characters.Class;
+
 import java.util.ArrayList;
 
 public class ClassDatabase {
     
+    public static Class noviceClass() {
+        return new Class("Novice", "As the name said, you are a Novice.", 0, 0, 0, 0, SkillDatabase.noviceSkills());
+    }
+
     public static ArrayList<Class> beginnerClasses() {
         ArrayList<Class> classes = new ArrayList<>();
         classes.add(new Class("Mercenary", "A skilled warrior for hire, experienced in battle tactics.", 75, 3, 2, 2));

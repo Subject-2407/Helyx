@@ -1,7 +1,11 @@
 package com.steven.helyx.game;
 
 import com.steven.helyx.characters.*;
+import com.steven.helyx.characters.skills.OffensiveSkill;
+import com.steven.helyx.characters.skills.Skill;
 import com.steven.helyx.utilities.*;
+
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -12,16 +16,30 @@ public class PVP {
         random = new Random();
     }
 
+    private static void waitMoment() {
+        random = new Random();
+        try { Thread.sleep(1000 + (1000 * random.nextInt(3))); } catch (InterruptedException e) {}
+    }
+
     public static void battle(Player player, Monster monster) {
         Scanner scanner = new Scanner(System.in);
         String hasWeapon = player.getEquippedWeapon() != null ? " (" + player.getEquippedWeapon().getName() + ")" : "";
+        ArrayList<Skill> playerSkills = player.getSkills();
         while (player.isAlive() && monster.isAlive()) {
             player.displayInfo();
-            System.out.println(monster.getName() + " HP: " + monster.getHP());
-            System.out.println("\nChoose an action:");
-            System.out.println("[1] Attack");
+            System.out.println("========== In Battle With ==========");
+            System.out.println("||  " + monster.getName() + "  HP: " + monster.getHP() + "/" + monster.getMaxHP());
+            System.out.println("====================================");
+            System.out.println("\n[1] Attack");
             System.out.println("[2] Block");
-            System.out.print("Enter choice: ");
+            
+            
+            for(int i = 0; i < playerSkills.size(); i++) {
+                String skillCooldown = playerSkills.get(i).isInCooldown() ? " - In Cooldown" : "";
+                System.out.println("[" + (i + 3) + "] " + playerSkills.get(i).getName() + " (" + playerSkills.get(i).getManaCost() + " Mana)" + skillCooldown);
+            }
+
+            System.out.print("\nEnter choice: ");
             int choice = scanner.nextInt();
             scanner.nextLine();
             System.out.println();
@@ -55,6 +73,7 @@ public class PVP {
                         UserInterface.enterReturn();
                     }
                 }
+                decreaseSkillsCooldown(playerSkills);
             } else if (choice == 2) {
                 System.out.println("> Waiting opponent to attack..");
                 waitMoment();
@@ -80,8 +99,30 @@ public class PVP {
                 }
                 if (!player.isAlive()) { break; }
                 UserInterface.enterReturn();
+                decreaseSkillsCooldown(playerSkills);
+            } else if (choice > 2 && choice <= (playerSkills.size() + 2)) {
+                useSkill(player, monster, playerSkills.get(choice - 3));
+            } else {
+                System.out.println("> You wasted a turn..");
+                waitMoment();
+                if (monster.isAlive()) {
+                    if (monsterHitChance(monster, player) == 1) {
+                        int monsterRawDamage = damageVariance(monster.attack());
+                        int playerDamageReduction = player.takeDamage(monsterRawDamage);
+                        String playerReduction = playerDamageReduction > 0 ? "(-" + playerDamageReduction + ")" : ""; 
+                        
+                        System.out.println("> The " + monster.getName() + " hits you for " + monsterRawDamage + playerReduction + " damage!");
+                        if (player.isAlive()) { UserInterface.enterReturn(); }
+                    } else {
+                        System.out.println("> The " + monster.getName() + " missed its attack!");
+                        UserInterface.enterReturn();
+                    }
+                }
+                decreaseSkillsCooldown(playerSkills);
             }
         }
+
+        
 
         if (!player.isAlive()) {
             System.out.println("> You have been defeated..");
@@ -93,6 +134,58 @@ public class PVP {
             player.gainGold(gainGold);
             System.out.println("> You defeated the " + monster.getName() + "! Received " + gainXP + " XP and found " + gainGold + " golds.");
             UserInterface.enterReturn();
+        }
+    }
+
+    public static void useSkill(Player player, Monster monster, Skill skill) {
+        if (!(player.getMana() >= skill.getManaCost())) {
+            System.out.println("> You don't have enough mana to use this skill! You wasted a turn..");
+            monsterAttackTurn(monster, player);
+            decreaseSkillsCooldown(player.getSkills());
+            return;
+        }
+
+        if (skill.isInCooldown()) {
+            System.out.println("> Your skill is currently in cooldown! You wasted a turn..");
+            monsterAttackTurn(monster, player);
+            decreaseSkillsCooldown(player.getSkills());
+            return;
+        }
+
+        for(int i = 0; i < player.getSkills().size(); i++) {
+            if (player.getSkills().get(i) == skill) {
+                continue;
+            } else {
+                player.getSkills().get(i).decreaseCooldown();
+            }
+        }
+        
+        player.reduceMana(skill.getManaCost());
+        skill.use(player, monster);
+        monsterAttackTurn(monster, player);
+        skill.startCooldown();
+    }
+
+    private static void decreaseSkillsCooldown(ArrayList<Skill> playerSkills) {
+        for(int i = 0; i < playerSkills.size(); i++) {
+            playerSkills.get(i).decreaseCooldown();
+        }
+    }
+
+    public static void monsterAttackTurn(Monster monster, Player player) {
+        if (monster.isAlive()) {
+            waitMoment();
+            if (monsterHitChance(monster, player) == 1) {
+                int monsterRawDamage = damageVariance(monster.attack());
+                int playerDamageReduction = player.takeDamage(monsterRawDamage);
+                String playerReduction = playerDamageReduction > 0 ? "(-" + playerDamageReduction + ")" : ""; 
+                
+                System.out.println("> The " + monster.getName() + " hits you for " + monsterRawDamage + playerReduction + " damage!");
+                if (player.isAlive()) { UserInterface.enterReturn(); }
+            } else {
+                System.out.println("> The " + monster.getName() + " missed its attack!");
+                UserInterface.enterReturn();
+            }
         }
     }
 
@@ -130,12 +223,8 @@ public class PVP {
         }
     }
 
-    private static void waitMoment() {
+    public static int damageVariance(int damage) {
         random = new Random();
-        try { Thread.sleep(1000 + random.nextInt(3001)); } catch (InterruptedException e) {}
-    }
-
-    private static int damageVariance(int damage) {
         int variance = (int)(damage * 0.1);
         return damage += random.nextInt(variance + 1) - (variance / 2);
     }

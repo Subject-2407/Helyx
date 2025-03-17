@@ -2,12 +2,12 @@ package com.steven.helyx.database;
 
 import java.util.ArrayList;
 
-import com.steven.helyx.locations.Dungeon;
-import com.steven.helyx.locations.Forest;
-import com.steven.helyx.locations.Guild;
 import com.steven.helyx.locations.Place;
-import com.steven.helyx.locations.Shop;
-import com.steven.helyx.locations.Tavern;
+import com.steven.helyx.locations.places.Dungeon;
+import com.steven.helyx.locations.places.Forest;
+import com.steven.helyx.locations.places.Guild;
+import com.steven.helyx.locations.places.Shop;
+import com.steven.helyx.locations.places.Tavern;
 
 public class PlaceDatabase {
     public static ArrayList<Place> eldoriaPlaces() {

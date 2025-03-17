@@ -1,5 +1,6 @@
 package com.steven.helyx.characters;
 
+import com.steven.helyx.characters.skills.Skill;
 import com.steven.helyx.game.*;
 import com.steven.helyx.items.*;
 import com.steven.helyx.utilities.*;
@@ -19,6 +20,8 @@ public class Player {
     private int gold;
     private int currentEnergy;
     private int maxEnergy;
+    private int maxMana;
+    private int currentMana;
     private int maxHP;
     private int currentHP;
     private Map<String, Integer> playerStats;
@@ -26,6 +29,7 @@ public class Player {
     private Equipment equippedWeapon;
     private Equipment equippedArmor;
     private Inventory inventory;
+    private ArrayList<Skill> additionalSkills;
     private Random random;
 
     public Player(String name, Class playerClass) {
@@ -44,8 +48,11 @@ public class Player {
         playerStats.put("Constitution", 0); // increases health
         this.playerPoints = 2;
 
+        this.maxMana = 40;
+        this.currentMana = maxMana;
         this.maxHP = 100;
         this.currentHP = maxHP;
+        this.additionalSkills = new ArrayList<>();
         this.inventory = new Inventory();
         this.random = new Random();
     }
@@ -75,12 +82,12 @@ public class Player {
 
     public void displayInfo() {
         UserInterface.clearConsole();
-        System.out.println("========================");
-        System.out.println(name + " (" + playerClass.getName() + " Class)");
-        System.out.println("Level: " + level + " (XP: " + xp + "/" + level * 100 + ")");
-        System.out.println("HP: " + currentHP + "/" + maxHP + "  Gold: " + gold);
-        System.out.println("Energy: " + currentEnergy + "/" + maxEnergy);
-        System.out.println("========================\n");
+        System.out.println("====================================================");
+        System.out.print("||  " + name + " (" + playerClass.getName() + " Class)");
+        System.out.println("  Level: " + level + " (XP: " + xp + "/" + level * 100 + ")" );
+        System.out.print("||  HP: " + currentHP + "/" + maxHP);
+        System.out.println("  MP: " + currentMana + "/" + maxMana + "  Energy: " + currentEnergy + "/" + maxEnergy + "  Gold: " + gold);
+        System.out.println("====================================================\n");
     }
 
     public boolean isAlive() {
@@ -89,6 +96,12 @@ public class Player {
 
     public Class getCurrentClass() {
         return playerClass;
+    }
+
+    public ArrayList<Skill> getSkills() {
+        ArrayList<Skill> classSkills = playerClass.getClassSkills() != null ? playerClass.getClassSkills() : new ArrayList<>();
+        classSkills.addAll(additionalSkills);
+        return classSkills;
     }
 
     public void changeClass(Class newClass) {
@@ -168,6 +181,19 @@ public class Player {
         return playerStats.get("Dexterity") + playerClass.getDexterityBonus();
     }
 
+    public int getMana() {
+        return currentMana;
+    }
+
+    public int getMaxMana() {
+        return maxMana;
+    }
+
+    public void reduceMana(int mana) {
+        currentMana -= mana;
+        if (currentMana < 0) currentMana = 0;
+    }
+
     public int getEnergy() {
         return currentEnergy;
     }
@@ -202,6 +228,7 @@ public class Player {
 
     public void gainGold(int golds) {
         gold += golds;
+        if (gold >= 99999) gold = 99999;
     }
 
     public int getStats(String stats) {
@@ -285,9 +312,9 @@ public class Player {
         boolean inStatsMenu = true;
         while (inStatsMenu) {
             displayInfo();
-            System.out.println("==== Stats ====");
-            System.out.println("*) Class and Equipments can give stat bonus.");
-            System.out.println("Player Points: " + playerPoints);
+            System.out.println("========== Stats ==========");
+            
+            System.out.println("> Player Points: " + playerPoints);
             System.out.println();
             int i = 0; for (String stat : playerStats.keySet()) {
                 i++;
@@ -300,7 +327,8 @@ public class Player {
                     System.out.println(additionalDexterity);
                 } else System.out.println();
             }
-            System.out.println("\n[0] Return to Main Menu");
+            System.out.println("\n*) Class and Equipments can give stat bonus.\n");
+            System.out.println("[0] Return to Main Menu");
             System.out.print("\nEnter stats to allocate on: ");
             
             int choice = scanner.nextInt();

@@ -1,10 +1,11 @@
-package com.steven.helyx.locations;
+package com.steven.helyx.locations.places;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import com.steven.helyx.characters.*;
 import com.steven.helyx.characters.Class;
+import com.steven.helyx.locations.Place;
 import com.steven.helyx.utilities.UserInterface;
 
 public class Guild extends Place{
@@ -21,7 +22,7 @@ public class Guild extends Place{
         boolean explore = true;
         while (explore && player.isAlive()) {
             player.displayInfo();
-            System.out.println("==== " + name + " Guild ====");
+            System.out.println("========== " + name + " Guild ==========");
             System.out.println("You can choose your new class here.\n");
 
             for (int i = 0; i < classes.size(); i++) {
