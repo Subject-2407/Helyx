@@ -22,6 +22,8 @@ public class Dungeon extends Place {
         this.monsters = monsters;
         this.random = new Random();
     }
+
+    public int getEnergyRequired() { return energyRequired; }
     
     public void explore(Player player) {
         if (player.getEnergy() >= energyRequired) {
@@ -30,16 +32,22 @@ public class Dungeon extends Place {
                 Scanner scanner = new Scanner(System.in);
 
                 player.displayInfo();
-                System.out.println("> Exploring through the dungeon..");
+                if (player.getEnergy() < energyRequired) {
+                    System.out.println("> You don't have enough energy to continue exploring.");
+                    System.out.println("> Exiting from " + this .name + ".");
+                    UserInterface.enterReturn();
+                    break;
+                }
+                System.out.println("> Exploring through " + this.name + "..");
                 try { Thread.sleep(1000 + random.nextInt(5001)); } catch (InterruptedException e) {}
 
                 Monster template = monsters.get(random.nextInt(monsters.size()));
                 Monster monster = new Monster(template);
                 
-                System.out.println("> You encountered a " + monster.getName() + "!\n");
+                System.out.println("> You encountered " + monster.getName() + "! (Battle Power: " + monster.getBattlePower() + ")\n");
                 System.out.println("[1] Fight");
                 System.out.println("[2] Run");
-                System.out.println("[3] Exit dungeon");
+                System.out.println("[3] Exit dungeon (-" + energyRequired + " Energy)");
 
                 System.out.print("\nEnter choice: ");
                 int choice = scanner.nextInt();
@@ -56,8 +64,8 @@ public class Dungeon extends Place {
                 else if (choice == 1){
                     PVE.battle(player, monster);
                 }
+                player.reduceEnergy(energyRequired);
             }
-            player.reduceEnergy(energyRequired);
             return;
         } else {
             System.out.println("You don't have enough energy to travel here!");

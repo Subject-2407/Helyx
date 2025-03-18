@@ -1,6 +1,7 @@
 package com.steven.helyx.characters;
 
 import com.steven.helyx.characters.skills.Skill;
+import com.steven.helyx.characters.skills.Utility.BuffSkill;
 import com.steven.helyx.game.*;
 import com.steven.helyx.items.*;
 import com.steven.helyx.utilities.*;
@@ -24,12 +25,17 @@ public class Player {
     private int currentMana;
     private int maxHP;
     private int currentHP;
+    private int strengthBuff;
+    private int defenseBuff;
+    private int dexterityBuff;
+    private int buffTimer;
     private Map<String, Integer> playerStats;
     private int playerPoints;
     private Equipment equippedWeapon;
     private Equipment equippedArmor;
     private Inventory inventory;
     private ArrayList<Skill> additionalSkills;
+    private ArrayList<BuffSkill> buffs;
     private Random random;
 
     public Player(String name, Class playerClass) {
@@ -38,7 +44,7 @@ public class Player {
         this.level = 1;
         this.xp = 0;
         this.gold = 100;
-        this.maxEnergy = 10;
+        this.maxEnergy = 20;
         this.currentEnergy = maxEnergy;
         this.playerStats = new LinkedHashMap<>();
 
@@ -53,6 +59,7 @@ public class Player {
         this.maxHP = 100;
         this.currentHP = maxHP;
         this.additionalSkills = new ArrayList<>();
+        this.buffs = new ArrayList<>();
         this.inventory = new Inventory();
         this.random = new Random();
     }
@@ -73,6 +80,8 @@ public class Player {
             playerPoints += 2;
             xp -= xpThreshold;
             currentHP = maxHP;
+            currentMana = maxMana;
+            currentEnergy = maxEnergy;
         }
     }
 
@@ -83,10 +92,11 @@ public class Player {
     public void displayInfo() {
         UserInterface.clearConsole();
         System.out.println("====================================================");
-        System.out.print("||  " + name + " (" + playerClass.getName() + " Class)");
-        System.out.println("  Level: " + level + " (XP: " + xp + "/" + level * 100 + ")" );
-        System.out.print("||  HP: " + currentHP + "/" + maxHP);
-        System.out.println("  MP: " + currentMana + "/" + maxMana + "  Energy: " + currentEnergy + "/" + maxEnergy + "  Gold: " + gold);
+        System.out.print("||  " + name + " (" + playerClass.getName() + ")");
+        System.out.println("   Level: " + level + " (XP: " + xp + "/" + level * 100 + ")" );
+        System.out.println("||  Battle Power: "+ getBattlePower() + "         Gold: " + gold);
+        System.out.println("||  HP: " + currentHP + "/" + maxHP + "   MP: " + currentMana + "/" + maxMana + "   Energy: " + currentEnergy + "/" + maxEnergy);
+        
         System.out.println("====================================================\n");
     }
 
@@ -151,13 +161,16 @@ public class Player {
     public void useItem(Usable usableItem) {
         System.out.println("> You used a " + usableItem.getName() + ".");
 
+        int bonusPoints = usableItem.getBonusPoints();
         switch (usableItem.getType()) {
-            case 1: addHP(usableItem.getBonusPoints()); break;
-            case 2: gainEnergy(usableItem.getBonusPoints()); break;
-            case 3: 
-                addHP(usableItem.getBonusPoints());
-                double energyGain = usableItem.getBonusPoints() * 0.1; 
-                gainEnergy((int)energyGain); break;
+            case 1: addHP(bonusPoints); break;
+            case 2: gainMana(bonusPoints); break;
+            case 3: gainEnergy(bonusPoints); break;
+            case 4:
+                double percentage = bonusPoints / 100.0; 
+                addHP((int)(this.maxHP * percentage));
+                gainMana((int)(this.maxMana * percentage));
+                gainEnergy((int)(this.maxEnergy * percentage)); break;
         }
     }
 
@@ -167,6 +180,77 @@ public class Player {
 
     public Equipment getEquippedArmor() {
         return equippedArmor;
+    }
+
+    public void addBuff(BuffSkill buff) {
+        buffs.add(buff);
+        modifyBuff("strength", buff.getStrengthBuff());
+        modifyBuff("defense", buff.getDefenseBuff());
+        modifyBuff("dexterity", buff.getDexterityBuff());
+    }
+
+    public void resetBuffs() {
+        for(int i = 0; i < buffs.size(); i++) {
+            modifyBuff("strength", -buffs.get(i).getStrengthBuff());
+            modifyBuff("defense", -buffs.get(i).getDefenseBuff());
+            modifyBuff("dexterity", -buffs.get(i).getDexterityBuff());
+            buffs.get(i).resetBuffTimer();
+            buffs.remove(i);
+        }
+    }
+
+    public void decreaseBuffsTimer() {
+        for(int i = 0; i < buffs.size(); i++) {
+            buffs.get(i).decreaseBuffTimer();
+            if (buffs.get(i).getBuffTimer() <= 0) {
+                modifyBuff("strength", -buffs.get(i).getStrengthBuff());
+                modifyBuff("defense", -buffs.get(i).getDefenseBuff());
+                modifyBuff("dexterity", -buffs.get(i).getDexterityBuff());
+                buffs.remove(i);
+            }
+        }
+    }
+
+    public int getBuff(String type) {
+        int buffValue = 0;
+        switch (type.toLowerCase()) {
+            case "strength":
+                buffValue = strengthBuff;
+                break;
+            case "defense":
+                buffValue = defenseBuff;
+                break;
+            case "dexterity":
+                buffValue = dexterityBuff;
+                break;
+        }
+        return buffValue;
+    }
+
+    public void modifyBuff(String type, int amount) {
+        switch (type.toLowerCase()) {
+            case "strength":
+                strengthBuff = Math.max(0, strengthBuff + amount);
+                break;
+            case "defense":
+                defenseBuff = Math.max(0, defenseBuff + amount);
+                break;
+            case "dexterity":
+                dexterityBuff = Math.max(0, dexterityBuff + amount);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid buff type: " + type);
+        }
+    }
+
+
+    public int getBattlePower() {
+        int weaponAttack = equippedWeapon != null ? equippedWeapon.getAttackBonus() : 0;
+        int armorDefense = equippedArmor != null ? equippedArmor.getDefenseBonus() : 0;
+        int strength = getStrength() + weaponAttack;
+        int defense = getDefense() + armorDefense;
+        int dexterity = getDexterity();
+        return (int)((maxHP * 0.5) + (strength * 2) + (defense * 1.5) + (dexterity * 1.2));
     }
 
     public int getStrength() {
@@ -187,6 +271,11 @@ public class Player {
 
     public int getMaxMana() {
         return maxMana;
+    }
+
+    public void gainMana(int mana) {
+        currentMana += mana;
+        if (currentMana > maxMana) currentMana = maxMana;
     }
 
     public void reduceMana(int mana) {
@@ -255,11 +344,11 @@ public class Player {
 
     public int attack() {
         int strength = getStrength();
-        int dexterity = Math.min(getDexterity(), 20);
+        int dexterity = Math.min(getDexterity() + dexterityBuff, 20);
         int weaponDamage = equippedWeapon != null ? equippedWeapon.getAttackBonus() : 0;
 
         // base damage
-        int baseDamage = strength + weaponDamage;
+        int baseDamage = strength + weaponDamage + strengthBuff;
 
         // critical chance
         boolean isCritical = random.nextInt(100) < dexterity * 2;
@@ -274,8 +363,8 @@ public class Player {
     public int takeDamage(int rawDamage) { // armor def contributes 60%, weapon def contributes 30%, player def contributes 10%
         int armorDefense = equippedArmor != null ? equippedArmor.getDefenseBonus() : 0;
         int weaponDefense = equippedWeapon != null ? equippedWeapon.getDefenseBonus() : 0;
-        int playerDefense = getDefense();
-        double reductionPercentage = ((armorDefense * 0.6) + (weaponDefense * 0.3) + (playerDefense * 0.1)) / (rawDamage + 1);
+        int playerDefense = getDefense() + defenseBuff;
+        double reductionPercentage = ((armorDefense * 0.55) + (weaponDefense * 0.25) + (playerDefense * 0.2)) / (rawDamage + 1);
         int finalDamage = Math.max(1, (int) (rawDamage * (1 - reductionPercentage)));
         currentHP -= finalDamage;
         if (currentHP < 0) currentHP = 0;

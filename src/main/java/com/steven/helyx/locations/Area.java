@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import com.steven.helyx.characters.Player;
+import com.steven.helyx.locations.places.Dungeon;
 
 public class Area {
     private String name;
@@ -39,7 +40,12 @@ public class Area {
                 System.out.println("There is nothing to look out here.");
             } else {
                 for (int i = 0; i < places.size(); i++) {
-                    System.out.println("[" + (i + 1) + "] " + places.get(i).getName() + "\n  - " + places.get(i).getDescription());
+                    String energyRequired = "";
+                    if (places.get(i) instanceof Dungeon) {
+                        Dungeon dungeonPlace = (Dungeon) places.get(i);
+                        energyRequired = " (" + dungeonPlace.getEnergyRequired() + " Energy per explore)";
+                    }
+                    System.out.println("[" + (i + 1) + "] " + places.get(i).getName() + energyRequired + "\n  - " + places.get(i).getDescription());
                 }
             }
 

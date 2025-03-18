@@ -25,13 +25,19 @@ public class Main {
         Player player = new Player(playerName, ClassDatabase.noviceClass());
         Inventory inventory = player.getInventory();
 
-        System.out.println("\nGood luck out there adventurer, you will begin as a Novice class with an Iron Sword and 2 health potions in your inventory.");
-        System.out.println("Remember, you only live once. If your HP reaches 0, it's game over.");
+        System.out.println("\nSteel your resolve, adventurer.");
+        System.out.println("You begin your journey as a mere Novice, armed with nothing but a Wooden Sword, a worn Leather Tunic, and two fragile health potions.");
+        System.out.println("Tread carefully, death is permanent. If your HP hits zero, your story ends here..");
         UserInterface.enterReturn();
         
-        inventory.addItem(new Equipment("Wooden Sword", "A sword made of wood.", 50, 1, 10, 5));
+        Equipment woodenSword = new Equipment("Wooden Sword", "A sword made of wood.", 50, 1, 10, 5);
+        Equipment leatherArmor = new Equipment("Leather Tunic", playerName, 0, 2, 0, 5);
+        inventory.addItem(woodenSword);
+        inventory.addItem(leatherArmor);
         inventory.addItem(new Usable("Health Potion", "Adds 50 HP.",40, 1, 50));
         inventory.addItem(new Usable("Health Potion", "Adds 50 HP.",40, 1, 50));
+        player.equipItem(woodenSword);
+        player.equipItem(leatherArmor);
 
         // render area
         ArrayList<Area> beginnerAreas = AreaDatabase.beginnerAreas();

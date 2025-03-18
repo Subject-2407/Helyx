@@ -79,6 +79,10 @@ public class Monster {
         return baseDefense;
     }
 
+    public int getBattlePower() {
+        return (int)((maxHP * 0.5) + (baseAttack * 2) + (baseDefense * 1.5) + (baseDexterity * 1.2));
+    }
+
     public int getExpReward() {
         return expReward;
     }

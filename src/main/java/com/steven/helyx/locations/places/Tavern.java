@@ -36,6 +36,7 @@ public class Tavern extends Place{
             if (this.fullService) {
                 player.setHP(player.getMaxHP());
                 player.setEnergy(player.getMaxEnergy());
+                player.gainMana(player.getMaxMana());
             } else {
                 player.addHP(this.healthBonus);
                 player.gainEnergy(this.energyBonus);
@@ -43,7 +44,7 @@ public class Tavern extends Place{
 
             String restoredStat = "";
             if (this.fullService) {
-                restoredStat = " Health and Energy restored.";
+                restoredStat = " Health, Mana, and Energy restored.";
             } else {
                 if (this.healthBonus > 0) {
                     restoredStat += " +" + this.healthBonus + " Health.";

@@ -3,7 +3,7 @@ package com.steven.helyx.items;
 import com.steven.helyx.characters.*;
 
 public class Usable extends Item {
-    private int type; // 1: Health Potion, 2: Energy Potion, 3: Golden Potion
+    private int type; // 1: Health Potion, 2: Mana Potion, 3: Energy Potion, 4: Golden Potion
     private int bonusPoints;
 
     public Usable(String name, String description, int price, int type, int bonus) {

@@ -29,6 +29,10 @@ public abstract class Skill {
         this.currentCooldown = cooldown;
     }
 
+    public void resetCooldown() {
+        this.currentCooldown = 0;
+    }
+
     public void decreaseCooldown() {
         this.currentCooldown -= 1;
         if (currentCooldown <= 0) currentCooldown = 0;
