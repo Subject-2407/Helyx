@@ -1,5 +1,5 @@
 # Helyx
-### Version : 0.3.0 alpha
+### Version : 0.4.0 alpha
 
 A turn-based RPG Game made with Java. (previously named Runebound)
 
@@ -12,11 +12,15 @@ A turn-based RPG Game made with Java. (previously named Runebound)
    
 and more things are coming in the future..
 
-## v0.3.0 Changelog
+## v0.4.0 Changelog
 ### New
-- Added Skill System
+- Mercenary Class now have new Skills
+- Added Mana Potion
+- Blocking now replenishes 2% mana to make it a more useful move
+- Killing monster now replenishes 4% mana
 ### Changes
-- Improved UI
-- Minor changes in code
+- Some UI readjustments
+- Dungeon now consumes energy per explore
+- Code improvement
 
 

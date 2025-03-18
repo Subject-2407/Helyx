@@ -13,7 +13,7 @@ import com.steven.helyx.locations.Area;
 import com.steven.helyx.utilities.UserInterface;
 
 public class Main {
-    private static String version = "v0.3.0 alpha";
+    private static String version = "v0.4.0 alpha";
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         UserInterface.clearConsole();
