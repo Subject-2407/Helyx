@@ -6,8 +6,8 @@ A turn-based RPG Game made with Java. (previously named Runebound)
 ## Current Features
 1. Character System (Player, Monsters, Level, Classes)
 2. Inventory & Item System (Equipments, Usables)
-3. Travel System (Explore places like tavern, shop, dungeon)
-4. Combat System (Hit Chance, Block Chance, Damage)
+3. Travel System (Explore places like Tavern, Shop, Dungeon)
+4. Combat System (Hit Chance, Blocking, Damage System)
 5. Skill System (Skills, Mana Point)
    
 and more things are coming in the future..
