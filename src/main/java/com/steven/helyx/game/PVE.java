@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
-public class PVP {
+public class PVE {
     private static Random random;
 
-    public PVP() {
+    public PVE() {
         random = new Random();
     }
 
@@ -30,21 +30,20 @@ public class PVP {
             System.out.println("========== In Battle With ==========");
             System.out.println("||  " + monster.getName() + "  HP: " + monster.getHP() + "/" + monster.getMaxHP());
             System.out.println("====================================");
-            System.out.println("\n[1] Attack");
-            System.out.println("[2] Block");
-            
+            System.out.print("\n[F] Attack");
+            System.out.print(" | [Q] Block");
+            if (playerSkills.size() > 0) { System.out.println("\n"); } else System.out.print("\n"); 
             
             for(int i = 0; i < playerSkills.size(); i++) {
                 String skillCooldown = playerSkills.get(i).isInCooldown() ? " - In Cooldown" : "";
-                System.out.println("[" + (i + 3) + "] " + playerSkills.get(i).getName() + " (" + playerSkills.get(i).getManaCost() + " Mana)" + skillCooldown);
+                System.out.println("[" + (i + 1) + "] " + playerSkills.get(i).getName() + " (" + playerSkills.get(i).getManaCost() + " Mana)" + skillCooldown);
             }
 
             System.out.print("\nEnter choice: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+            String choice = scanner.nextLine().trim().toLowerCase();
             System.out.println();
 
-            if (choice == 1) {
+            if (choice.matches("f")) {
                 if (playerHitChance(player, monster) == 1) {
                     int tempMonsterHP = monster.getHP();
                     int playerDamage = damageVariance(player.attack());
@@ -74,7 +73,7 @@ public class PVP {
                     }
                 }
                 decreaseSkillsCooldown(playerSkills);
-            } else if (choice == 2) {
+            } else if (choice.matches("q")) {
                 System.out.println("> Waiting opponent to attack..");
                 waitMoment();
                 if (monster.isAlive()) {
@@ -100,8 +99,9 @@ public class PVP {
                 if (!player.isAlive()) { break; }
                 UserInterface.enterReturn();
                 decreaseSkillsCooldown(playerSkills);
-            } else if (choice > 2 && choice <= (playerSkills.size() + 2)) {
-                useSkill(player, monster, playerSkills.get(choice - 3));
+            } else if (choice.matches("[1-" + playerSkills.size() + "]") && playerSkills.size() > 0) {
+                int skillChoice = Integer.parseInt(choice);
+                useSkill(player, monster, playerSkills.get(skillChoice - 1));
             } else {
                 System.out.println("> You wasted a turn..");
                 waitMoment();
@@ -162,7 +162,7 @@ public class PVP {
         
         player.reduceMana(skill.getManaCost());
         skill.use(player, monster);
-        monsterAttackTurn(monster, player);
+        // monsterAttackTurn(monster, player);
         skill.startCooldown();
     }
 
@@ -245,7 +245,7 @@ public class PVP {
         return isBlocked ? 1 : 0;
     }
 
-    private static int playerHitChance(Player player, Monster monster) {
+    public static int playerHitChance(Player player, Monster monster) {
         // get both dexterity
         int playerDexterity = player.getDexterity();
         int monsterDexterity = monster.getDexterity();

@@ -47,14 +47,14 @@ public class Dungeon extends Place {
                 System.out.println();
 
                 if (choice == 2) {
-                    if (!PVP.attemptEscape(player, monster)) {
-                        PVP.battle(player, monster);
+                    if (!PVE.attemptEscape(player, monster)) {
+                        PVE.battle(player, monster);
                     }
                 } else if (choice == 3) {
                     keepExploring = false;
                 }
                 else if (choice == 1){
-                    PVP.battle(player, monster);
+                    PVE.battle(player, monster);
                 }
             }
             player.reduceEnergy(energyRequired);
